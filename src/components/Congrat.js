@@ -13,7 +13,7 @@ const Congrat = (props) => {
 		return (
 			<div data-test='component-congrat' className='alert alert-success'>
 				<span data-test='congrats-message'>
-					Congratulatio! You guessed the word!
+					Congratulation! You guessed the word!
 				</span>
 			</div>
 		);
