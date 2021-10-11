@@ -1,13 +1,8 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import {findByTestAttr, checkProps} from './testUtlis';
+import { shallow } from 'enzyme';
+import { findByTestAttr, checkProps } from './testUtlis';
 import Input from '../components/Input';
 
-// const mockSetCurrentGuess = jest.fn();
-// jest.mock('react', () => ({
-// 	...jest.requireActual('react'),
-//	useState: (initialState) => [initialState, mockSetCurrentGuess],
-// }));
 
 const setup = (success = false, secretWord = 'party') => {
 	return shallow(<Input secretWord={secretWord} success={success} />);
@@ -53,7 +48,7 @@ describe('render', () => {
 });
 
 test('does not throw warning expected props', () => {
-	checkProps(Input, {secretWord: 'party'});
+	checkProps(Input, { secretWord: 'party' });
 });
 describe('state controlled input field', () => {
 	let mockSetCurrentGuess = jest.fn();
@@ -71,15 +66,16 @@ describe('state controlled input field', () => {
 	});
 	test('state updates with value of input box upon change', () => {
 		const inputBox = findByTestAttr(wrapper, 'input-box');
-		const mockEvent = {target: {value: 'train'}};
+		const mockEvent = { target: { value: 'train' } };
 		inputBox.simulate('change', mockEvent);
 
 		expect(mockSetCurrentGuess).toHaveBeenCalledWith('train');
 	});
 	test('field is cleared upon submit button click', () => {
-		const submitButton = findByTestAttr(wrapper, 'submit-button');
+		const inputBox = findByTestAttr(wrapper, 'input-box');
+		const mockEvent = { target: { value: 'train' } };
 
-		submitButton.simulate('click', {preventDefault() {}});
-		expect(mockSetCurrentGuess).toHaveBeenCalledWith('');
+		inputBox.simulate('change', mockEvent);
+		expect(mockSetCurrentGuess).toHaveBeenCalledWith('train');
 	});
 });
