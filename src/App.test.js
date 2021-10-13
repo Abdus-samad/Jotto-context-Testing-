@@ -1,3 +1,4 @@
+import React from 'react';
 import App from './App';
 import { mount } from 'enzyme';
 import { findByTestAttr } from './test/testUtlis';
@@ -8,7 +9,7 @@ import { getSecretWord as mockGetSecretWord } from './actions/Index';
 
 /**
  * Setup function for App
- * @returns {ShallowWrapper}
+ * @returns {ReactWrapper}
  */
 
 const setup = () => {
@@ -17,10 +18,31 @@ const setup = () => {
 	return mount(<App />);
 };
 
-test('renders  without error', () => {
-	const wrapper = setup();
-	const appComponent = findByTestAttr(wrapper, 'component-app');
-	expect(appComponent).toHaveLength(1);
+describe.each([
+	[null, true, false],
+	['party', false, true],
+])('renders with secretWors as %s', (secretWord, loadingShows, appShows) => {
+	let wrapper;
+	let originalUseReducer;
+	beforeEach(() => {
+		originalUseReducer = React.useReducer;
+		const mockUseReducer = jest
+			.fn()
+			.mockReturnValue([{ secretWord }, jest.fn()]);
+		React.useReducer = mockUseReducer;
+		wrapper = setup();
+	});
+	afterEach(() => {
+		React.useReducer = originalUseReducer;
+	});
+	test(`renders loading spinner: ${loadingShows}`, () => {
+		const spinnerComponent = findByTestAttr(wrapper, 'spinner');
+		expect(spinnerComponent.exists()).toBe(loadingShows);
+	});
+	test(`renders app: ${appShows}`, () => {
+		const appComponent = findByTestAttr(wrapper, 'component-app');
+		expect(appComponent.exists()).toBe(appShows);
+	});
 });
 
 describe('get secret word', () => {

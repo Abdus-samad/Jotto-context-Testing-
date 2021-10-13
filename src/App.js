@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import './App.css';
 import GuessedWords from './components/GuessedWords';
 import Congrats from './components/Congrats';
@@ -8,15 +8,15 @@ import { getSecretWord } from './actions/Index';
 
 /**
  * @function reducer to update state automatically called by dispatch
- * @param {*} state - previous state
- * @param {*} action - 'type' and 'payload' properties
+ * @param {object} state - previous state
+ * @param {object} action - 'type' and 'payload' properties
  * @returns {object} - new State
  */
 
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'setSecretWord':
-			return { ...state, secret: action.payload };
+			return { ...state, secretWord: action.payload };
 		default:
 			throw new Error(`Invalid action type: ${action.type}`);
 	}
@@ -25,7 +25,7 @@ const reducer = (state, action) => {
 function App() {
 	// const [secretWord, setSecretWord]  = useState('')
 
-	const [state, dispatch] = React.useReducer(reducer, { secretWord: '' });
+	const [state, dispatch] = React.useReducer(reducer, { secretWord: null });
 	// TODO: get props from shared state
 	const success = false;
 	const guessedWords = [];
@@ -40,6 +40,17 @@ function App() {
 	useEffect(() => {
 		getSecretWord(setSecretWord);
 	}, []);
+
+	if (state.secretWord === null) {
+		return (
+			<div className='container' data-test='spinner'>
+				<div className='spinner-border' role='status'>
+					<span className='sr-only'>Loading...</span>
+				</div>
+				<p>Loading Secret Word...</p>
+			</div>
+		);
+	}
 	return (
 		<div className='container' data-test='component-app'>
 			<h1>Jotto</h1>
